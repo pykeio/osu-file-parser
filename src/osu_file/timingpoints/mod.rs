@@ -194,6 +194,10 @@ impl TimingPoint {
         &self.time
     }
 
+    pub fn beat_length(&self) -> &Decimal {
+        &self.beat_length
+    }
+
     /// Set the timing point's start time.
     pub fn set_time(&mut self, time: Integer) {
         self.time = time.into();
