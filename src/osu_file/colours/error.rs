@@ -39,6 +39,9 @@ pub enum ParseRgbError {
     /// Invalid blue value.
     #[error("Invalid blue value")]
     InvalidBlue,
+    /// Invalid alpha value.
+    #[error("Invalid alpha value")]
+    InvalidAlpha,
     /// Missing green value.
     #[error("Missing green value")]
     MissingGreen,

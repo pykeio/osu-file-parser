@@ -199,7 +199,7 @@ impl FromStr for OsuFile {
             }
         };
 
-        if !(MIN_VERSION..=LATEST_VERSION).contains(&version) {
+        if !(MIN_VERSION..=LATEST_VERSION).contains(&version) && version != 128 {
             return Err(ParseError::InvalidFileVersion.into());
         }
 
@@ -324,7 +324,9 @@ impl FromStr for OsuFile {
 /// Error for when there's a problem parsing an .osu file.
 pub enum ParseError {
     /// File version is invalid.
-    #[error("Invalid file version, expected versions from {MIN_VERSION} ~ {LATEST_VERSION}")]
+    #[error(
+        "Invalid file version, expected versions from {MIN_VERSION} ~ {LATEST_VERSION} or v128"
+    )]
     InvalidFileVersion,
     /// File version is defined wrong.
     #[error("File version defined wrong, expected `osu file format v..` at the start")]

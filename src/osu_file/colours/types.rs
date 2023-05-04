@@ -1,4 +1,5 @@
 use nom::{
+    combinator::opt,
     error::context,
     sequence::{preceded, tuple},
 };
@@ -16,6 +17,8 @@ pub struct Rgb {
     pub green: u8,
     /// Blue colour.
     pub blue: u8,
+    /// Alpha.
+    pub alpha: Option<u8>,
 }
 
 impl VersionedFromStr for Rgb {
@@ -24,7 +27,7 @@ impl VersionedFromStr for Rgb {
     fn from_str(s: &str, _: Version) -> Result<Option<Self>, Self::Err> {
         let byte = || map_res(digit1, |s: &str| s.parse());
 
-        let (_, (red, green, blue)) = tuple((
+        let (_, (red, green, blue, alpha)) = tuple((
             preceded(space0, context(ParseRgbError::InvalidRed.into(), byte())),
             preceded(
                 tuple((
@@ -40,11 +43,20 @@ impl VersionedFromStr for Rgb {
                     context(ParseRgbError::MissingBlue.into(), comma()),
                     space0,
                 )),
-                context(ParseRgbError::InvalidBlue.into(), consume_rest_type()),
+                context(ParseRgbError::InvalidBlue.into(), byte()),
             ),
+            opt(preceded(
+                tuple((space0, comma(), space0)),
+                context(ParseRgbError::InvalidAlpha.into(), consume_rest_type()),
+            )),
         ))(s)?;
 
-        Ok(Some(Rgb { red, green, blue }))
+        Ok(Some(Rgb {
+            red,
+            green,
+            blue,
+            alpha,
+        }))
     }
 }
 
