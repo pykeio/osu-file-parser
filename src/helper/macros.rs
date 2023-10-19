@@ -1,7 +1,7 @@
 macro_rules! versioned_inner {
     ($name:ident, $field_type:ty, $error_from_string:ty, $s_from_string:ident, $version_from_string:ident, $inner_from_string:block) => {
         #[derive(PartialEq, Debug, Clone, Eq, Hash)]
-        pub struct $name($field_type);
+        pub struct $name(pub $field_type);
 
         impl From<$field_type> for $name {
             fn from(t: $field_type) -> Self {
